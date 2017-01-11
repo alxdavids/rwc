@@ -81,18 +81,18 @@
 - for example, easy to distinguish implementations of DES/AES (does this fit into security requirement?)
 - More notable for Q&A for the inquiry into moral implications of work
 
-### NIST PQ challenge - Rene Peralta
+### NIST PQ challenge -- Rene Peralta
 
 - The NIST challenge has been officially announced
 
-### CRYSTAL - Tancrede Lepoint
+### CRYSTAL -- Tancrede Lepoint
 
 - Cryptographic suite for lattice-based constructions
 - NIST PQ submission 
 - Module lattices used for operations
 - Comparison to NewHope, NTRUPrime, Frodo?
 
-### Frodo - Valeria Nikolaenko
+### Frodo -- Valeria Nikolaenko
 
 - Key Change based on LWE rather than RLWE (NewHope)
 - Communication is increased since matrices are sent instead of cyclotomic ring elements
@@ -100,7 +100,7 @@
 - Represents security trade-off
 -- LWE security much better understood 
 
-### Supersingular Isogeny DH - Michael Naehrig
+### Supersingular Isogeny DH -- Michael Naehrig
 
 - Don't understand elliptic curves or isogenies
 - Communication much better than lattice-based proposals
@@ -149,6 +149,15 @@
 -- Inhibits the ability of groups to conduct thorough research into 
 - The EFF are aiding the case and have been attempting to get the law changed for some time
 
+### Message Encryption -- Trevor Perrin
+
+- A broad historical overview of the work that lead to the proliferation of secure messaging apps such as Signal
+- Short explanation of key concepts behind design choices
+-- Authenticate-then-Encrypt
+-- DH ractheting for forward-secrecy
+-- Establishing trust between users using auth checks and trusted directories
+- Brief explanation of how multi-device, multi-person interactions work
+
 
 ### Proof of Signal protocol -- Luke Garratt
 
@@ -157,13 +166,98 @@
 - Theoretical analysis
 - Proof is long but not necessarily complex (apparently)
 - Analyse with respect to forward secrecy and post-compromise security
+-- Post-compromise security allows the honest parties to recover a secure communication even after a compromise has taken place
+-- Signal achieves this (can't exactly remember how)
+- Some limitations (e.g. honest key distribution and some keys assumed to be authentic)
 - Euro S&P
 
-### 0-RTT Key Exchange with Full Forward Secrecy - Felix Gunther
+### Is Password Insecurity Inevitable? -- Hugo Krawczyk
 
-- Don't have to wait for a round trip before data can be sent (client -> server?)
-- Establishes the key in the first message (maybe it needs pre-existing key material?)
-- Explicit goal in QUIC and TLS1.3
-- Replay attacks of first message is partially unavoidable
-- no forward secrecy (considered inherent)
--- this is shown to be false in this work (impossibility wasn't already proven?)
+- Movement to password managers is becoming ubiquitous
+- Protocols for establishing passwords are not necessarily well thought out
+- Furthermore, users benefit if their passwords are indistinguishable from uniformly random
+-- How can this be achieved?
+-- Can it be done without revealing master password at any time?
+- Interesting protocol using Oblivious PRF construction
+-- Parties are phone, local host and server
+-- Passwords are stored on local host
+-- Phone aims to retrieve passwords without local host learning master password or retrieved password
+- Can't remember explicit construction
+
+### Solving the Cloudflare CAPTCHA -- George Tankersley
+
+- Notable stuff:
+-- Good, meaningful discussions on work
+-- Interest from prominent members of community, including new solutions not necessarily based on Chaumian signatures
+-- One question from the floor didn't seem to understand why Tor IPs were blocked in the first place
+-- Another asked if Cloudflare customers would be happy with the change
+
+## DAY 3
+
+### Physics of building a quantum computer -- Evan Jeffrey
+
+- Points to take home for a cryptographer:
+-- Current quantum chips that have been tested at Google have 9 qubits with 99.5% accuracy in computation
+-- Computation only takes place in very precise conditions (e.g. very cold, huge basins)
+-- Factoring is way off (Google aren't bothered about this apparently...)
+-- Require better fault-tolerance before any meaningful headway can be made
+-- We're about 10-15 years away from a viable quantum computer
+-- panic
+
+### Erasing Secrets from RAM
+
+- No current verifiable ways of checking whether functions are likely to suspend critical data in RAM
+-- This sort of data could be exposed using cold-coot attacks etc.
+- Static/dynamic code analysis is not capable of picking up these kind of issues
+- secretgrind (new plugin for clang/LLVM)
+-- Analyses software and highlights which functions are likely to suspend key material in RAM
+
+### DAA + TPM2.0 -- Anja Lehmann
+
+- DAA allows a TPM to sign attestations detailing correct usage of key material anonymously
+- Analyses the previous work in developing security models for DAA in TPM2.0
+- Older security models are shown to be incorrect or incompatible with TPM2.0
+- Develops a new API for TPM2.0 to remove static DH oracles
+- Revised protocol can then be proven secure with respect to DAA security model
+
+### What is Revealed by ORE -- David Cash
+
+- Assume that ORE is used to encrypt a database with columns containing various characteristics (e.g. location data)
+- Assume that columns in the database are correlated in a simple manner
+-- The examples that were used were road intersection points in california, or phone GPS data plotted on a map
+- Unfortunately it is shown that revealing correlations can be made between encrypted data and plaintext by just reordering points and plotting in ranked system
+- For example, for the intersections it is shown that the map is pretty much identically reconstructed
+-- Ciphertexts are ranked in height order and then replotted on a x,y axis
+- Interesting work and shows that even semantically secure ORE a la Boneh et al. is still rather leaky
+- Also highlights discrepancies with security models that analyse security using uniform plaintexts
+
+### Breaking Web Apps Built Upon Encrypted Data -- Paul Grubbs
+
+- Seen this talk before
+- Highlights how searchable encryption and meta data leakage can be used to construct telling vulnerabilities in platforms such as Mylar (see next talk)
+- Most of the talk was centred on the explicit security claims in the **original**  Mylar paper
+- Highlights how research into constructions of crypto can be harmful -- especially if the authors are dishonest with claims and revisions
+
+### Building Web Apps Upon Encrypted Data -- Raluca Ada Popa
+
+- Went through the explicit constructions and design choices made in developing Mylar and Verena (successor)
+- Attempted to show that the attacks above were out of scope
+-- This kind of showed up how theoretical crypto doesn't necessarily meet practical needs
+-- We need secure models from the start
+- Declared that metadata leakage should be prevented at the user-level
+-- **audience consternation klaxon**
+- Highlighted how Mylar and Verena are constructions working towards an end-goal that allows users to interact with web apps while not leaking data that stored
+- New system to be revealed soon known as Opaque that goes further
+
+### Re-thinking internet scale concensus -- Elaine Shi
+
+- Can't really remember the object of this talk
+- Contained my favourite moment, however where it was noted that honeybadgers are of course very robust animals
+- Talked a lot about bitcoin being a very robust protocol
+- Showed a new way of doing hashing in order to agree with some security guarantee
+
+### Ripple talk -- Pedro Moreno-Sanchez
+
+- Credit networks are substantially different from smart contract style agreements
+- Involve detailing the passage of credit between entities in a connected topology
+- Detailed flaws in the credit network known as Ripple
