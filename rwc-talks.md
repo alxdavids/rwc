@@ -183,6 +183,7 @@
 -- Passwords are stored on local host
 -- Phone aims to retrieve passwords without local host learning master password or retrieved password
 - Can't remember explicit construction
+- It was named SPHINX and the plan is to make an android app that would follow the design
 
 ### Solving the Cloudflare CAPTCHA -- George Tankersley
 
